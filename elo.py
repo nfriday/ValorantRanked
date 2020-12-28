@@ -2,10 +2,14 @@ import requests
 import json
 import re
 import datetime
+import yaml
+import os
 
-region = 'eu'
-username = 'CHANGEME'
-password = 'CHANGEME'
+with open(os.path.dirname(__file__) + '\\config.yaml') as file:
+    config = yaml.load(file, Loader=yaml.FullLoader)
+    region = config['region']
+    username = config['username']
+    password = config['password']
 
 session = requests.session()
 
@@ -67,4 +71,3 @@ for match in response.json()['Matches']:
     }
     friendly_level = level_map.get(level)
     print(f'{friendly_time} {friendly_level}\t{value} ({friendly_change})')
-
