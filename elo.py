@@ -56,31 +56,34 @@ user_id = response.json()['sub']
 uri = f'https://pd.{region}.a.pvp.net/mmr/v1/players/{user_id}/competitiveupdates?startIndex=0&endIndex=20'
 response = session.get(uri, headers=headers)
 
+rank_map = {
+    0: 'UNKNOWN', 1: 'UNKNOWN 1', 2: 'UNKNOWN 2',
+    3: 'IRON 1', 4: 'IRON 2', 5: 'IRON 3',
+    6: 'BRON 1', 7: 'BRON 2', 8: 'BRON 3',
+    9: 'SILV 1', 10: 'SILV 2', 11: 'SILV 3',
+    12: 'GOLD 1', 13: 'GOLD 2', 14: 'GOLD 3',
+    15: 'PLAT 1', 16: 'PLAT 2', 17: 'PLAT 3',
+    18: 'DIAM 1', 19: 'DIAM 2', 20: 'DIAM 3',
+    21: 'IMMO 1', 22: 'IMMO 2', 23: 'IMMO 3',
+    24: 'RADIANT'
+}
+
+level_map = {
+    'Bonsai': 'Split',
+    'Port': 'Icebox',
+    'Triad': 'Haven',
+    'Duality': 'Bind',
+    'Ascent': 'Ascent',
+    '?': '?'
+}
+
 for match in response.json()['Matches']:
     value = match['TierProgressAfterUpdate']
     change = match['TierProgressAfterUpdate'] - match['TierProgressBeforeUpdate']
-    rank_map = {
-        1: 'UNKNOWN 1', 2: 'UNKNOWN 2',
-        3: 'IRON 1', 4: 'IRON 2', 5: 'IRON 3',
-        6: 'BRON 1', 7: 'BRON 2', 8: 'BRON 3',
-        9: 'SILV 1', 10: 'SILV 2', 11: 'SILV 3',
-        12: 'GOLD 1', 13: 'GOLD 2', 14: 'GOLD 3',
-        15: 'PLAT 1', 16: 'PLAT 2', 17: 'PLAT 3',
-        18: 'DIAM 1', 19: 'DIAM 2', 20: 'DIAM 3',
-        21: 'IMMO 1', 22: 'IMMO 2', 23: 'IMMO 3',
-        24: 'RADIANT'
-    }
     rank = rank_map.get(match['TierAfterUpdate'])
     friendly_change = f'+{change}' if (change > 0) else f'{change}'
     friendly_time = datetime.datetime.utcfromtimestamp(match['MatchStartTime'] / 1000).strftime('%Y-%m-%d %H:%M')
-    level = match['MapID'] = match['MapID'].split('/')[3]
-    level_map = {
-        'Bonsai': 'Split',
-        'Port': 'Icebox',
-        'Triad': 'Haven',
-        'Duality': 'Bind',
-        'Ascent': 'Ascent'
-    }
+    level = match['MapID'].split('/')[3] if match['MapID'] else '?'
     friendly_level = level_map.get(level)
     print(f'{friendly_time}    {str.rjust(friendly_level,6)}    {str.rjust(str(value),3)}  ({str.rjust(friendly_change,3)})    [{rank}]')
 
