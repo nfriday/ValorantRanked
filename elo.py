@@ -87,3 +87,5 @@ for match in response.json()['Matches']:
     friendly_level = level_map.get(level)
     print(f'{friendly_time}    {str.rjust(friendly_level,6)}    {str.rjust(str(value),3)}  ({str.rjust(friendly_change,3)})    [{rank}]')
 
+input("Press enter...")
+
