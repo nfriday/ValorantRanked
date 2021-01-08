@@ -5,7 +5,8 @@ import datetime
 import yaml
 import os
 
-with open(os.path.dirname(__file__) + '\\config.yaml') as file:
+configpath = os.path.dirname(__file__) + '\\config.yaml'
+with open(configpath) as file:
     config = yaml.load(file, Loader=yaml.FullLoader)
     region = config['region']
     username = config['username']
@@ -23,7 +24,7 @@ uri = 'https://auth.riotgames.com/api/v1/authorization'
 data = {
     'client_id': 'play-valorant-web-prod',
     'nonce': '1',
-    'redirect_uri': 'https://beta.playvalorant.com/opt_in',
+    'redirect_uri': 'https://playvalorant.com/opt_in',
     'response_type': 'token id_token',
 }
 data_json = json.dumps(data)
